@@ -33,12 +33,13 @@
     </outputs>
     <tests>
       <test>
-        <param name="input1" value=""/>
-        <output name="output1" file=""/>
+        <param name="input1" value="latlon_ansi.tab"/>
+        <output name="output1" file="out_from_ansi_to_utf8.tsv"/>
       </test>
       <test>
-        <param name="input1" value=""/>
-        <output name="output1" file=""/>
+        <param name="input1" value="latlon_utf8.tab"/>
+        <param  name="ansi_out" value="true"/>
+        <output name="output1" file="out_from_utf8_to_ansi.tsv"/>
       </test>
     </tests> 
     <help><![CDATA[

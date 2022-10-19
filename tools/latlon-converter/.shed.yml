@@ -1,0 +1,9 @@
+categories:
+- Phylogenetics
+description: Converts latitude and longitude into a stardard form
+homepage_url: <http://itaxotools.org>
+long_description: 'Converts latitude and longitude into a stardard form. Input may be ANSI (Windows ISO-8859-1) or UTF-8 (Linux) encoded. Output will be UTF-8 (default) or both. 
+The input file should contain coordinates in maximum two (tab-separated) columns. First line can be a heading with column headings being one of: 'lat', 'latitude', 'lon', 'longitude', 'latlon', 'lonlat', 'lat-lon', 'lon-lat'.
+The output file is a tab-separated table with original coordinates and standard formattings of them.'
+name: latlon-converter
+owner: ffischell

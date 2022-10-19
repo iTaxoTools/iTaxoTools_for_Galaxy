@@ -96,6 +96,8 @@
     <help><![CDATA[
 *Notes for Galaxy wrapper: Only tested for fasta alignment files. Transition and seed parameters are not currently supported. Tamura-Nei distance calculation is either really slow or broken. Please don't use.  - F.Fischell*
 
+GUI versions for Windows an Linux are available at https://github.com/iTaxoTools/iTaxoTools-Executables/releases
+
 From original readme (Puillandre, N., Brouillet, S., & Achaz, G):
 
 Source file  must be one of these files:
