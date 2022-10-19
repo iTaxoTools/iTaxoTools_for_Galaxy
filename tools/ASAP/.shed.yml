@@ -1,0 +1,7 @@
+categories:
+- Phylogenetics
+description: ASAP Agglomerate Specimens by Automatic Processing for iTaxoTools
+homepage_url: <http://itaxotools.org>
+long_description: 'The Assemble Species by Automatic Partitioning (ASAP) approach to species delimitation has been introduced by Puillandre et al. (2021). ASAP is a tool designed to propose partitions of species hypotheses using genetic distances calculated between DNA sequences.'
+name: asap
+owner: ffischell
