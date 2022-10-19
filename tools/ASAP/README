@@ -1,0 +1,88 @@
+ASAP command line: Brief Install and How to Description
+
+
+
+******Install
+you can install in 4 steps by typing the 4 following commands in a terminal
+1) cd <dir where asap.tgz is located>
+2) tar -xvzf asap.tgz
+3) cd asap
+4) make 
+5) make clean
+You should have a working asap script in your asap directory.
+
+******Run:
+If you are in a hurry and want as soon as possible to see asap working, just type 
+
+./asap <file_name> 
+
+
+<file_name> must be one of these files: 
+-fasta alignment
+-phylip distance file
+-MEGA distance file (see MEGA information below)
+
+./asap -h
+will give you this help
+	-h    : this help
+		-r #  : nbr of replicates for statistical tests (default is 10^4)
+		-b #  : nbr of best results to be reported (default is 10)
+		-m    : if present the distance Matrix is supposed to be MEGA CVS (other formats are guessed)
+		-a    : output all files: all probabilities, tree and graph files (default only graph files and 10 best agglomerations)
+		-d #  : distance (0: Kimura-2P, 1: Jukes-Cantor --default--, 2: Tamura-Nei 3:simple distance)
+		-o #  : NOT WORKING YET existent directory where results files are written (default is same dir than alignment)
+		-t #  : transition/transversion (for Kimura) default:2
+
+
+
+
+******Results: 
+ASAP will print on screen the number of best results you choosed with -b option or the 10 best if no value is specified
+It will produce some other files as 2 graphics files 
+
+
+******Information
+
+This software is delivered with  BIONJ C source code very slightly modified to construct the newick tree.
+
+You can get more information on BIONJ here:
+BIONJ: an improved version of the NJ algorithm based on a simple model of sequence data." 
+Gascuel O. Molecular Biology and Evolution. 1997 14:685-695
+
+
+
+-------------------MEGA information---------------
+Two MEGA distance files are read: 
+
+*********
+CVS file (default MEGA 5)  formated as follows:
+[name 1],,
+[name 2],##,,
+...
+[name n],##,##,... ##,,
+
+You must specify a -m option on command line with this type of file
+
+**********
+default MEGA 4, formated as below
+#mega
+!Format DataType=Distance DataFormat=LowerLeft NTaxa=100
+!other informations
+	line
+	line...
+	
+;
+[1] #name 1
+[2] #name 2
+...
+[n] #name n
+
+[1 2.... n]
+[1] 
+[2] ##
+[3] ## ##
+...
+[n] ## ## .....##
+
+This mega format is assumed  as soon as the "#mega" keyword is present on 1st line
+Some variations are tolerated in this latter format, but if you get an error you should try to stick to one above.

@@ -1,0 +1,63 @@
+<tool id="latlonConv" name="latlonConv" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+<description>Batch converter for geographical cooridinates</description>
+    <requirements>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+      bash $runme &&
+      $__tool_directory__/latlon_conv --cmd <'input_conv' >'$output1'
+      #if $ansi_out
+        && iconv -f UTF-8 -t ISO-8859-1//IGNORE $output1 -o $output2 -c
+      #end if
+    ]]></command>
+  <configfiles>
+    <configfile name="runme"><![CDATA[
+ file -i $input1  &>checktype.txt
+  if grep -q 'iso' checktype.txt
+  then
+    iconv -f ISO-8859-1 -t UTF-8//IGNORE $input1 -o 'input_conv' -c
+ else
+   cp $input1 input_conv
+ fi
+]]></configfile>
+  </configfiles>
+
+    <inputs>
+        <param  type="data" name="input1" label="Input file" format="tabular" />
+        <param  type="boolean" name="ansi_out" label="Additional ANSI output (default only UTF-8)" />
+    </inputs>
+    <outputs>
+      <data name="output1" label="LatLon: ${os.path.splitext(os.path.basename($input1.name))[0]}_utf8.tab" format="tsv"/>
+      <data name="output2" label="LatLon: ${os.path.splitext(os.path.basename($input1.name))[0]}_ansi.tab" format="data">
+         <filter>ansi_out</filter> 
+      </data>
+    </outputs>
+    <tests>
+      <test>
+        <param name="input1" value=""/>
+        <output name="output1" file=""/>
+      </test>
+      <test>
+        <param name="input1" value=""/>
+        <output name="output1" file=""/>
+      </test>
+    </tests> 
+    <help><![CDATA[
+**latlon-converter**
+Converts latitude and longitude into a stardard form
+Input may be ANSI (Windows ISO-8859-1) or UTF-8 (Linux) encoded. Output will be UTF-8 (default) or both. 
+Galaxy can  display the UTF-8 output,  ANSI can only be downloaded.
+
+The input file should contain coordinates in maximum two (tab-separated) columns. First line can be a heading with column headings being
+one of: 'lat', 'latitude', 'lon', 'longitude', 'latlon', 'lonlat', 'lat-lon', 'lon-lat'.
+
+The output file is a tab-separated table with original coordinates and standard formattings of them.
+
+GUI versions for Windows an Linux are available at https://github.com/iTaxoTools/iTaxoTools-Executables/releases
+
+    ]]></help>
+  <citations>
+      <citation type="doi">
+          10.11646/megataxa.6.2.1 
+      </citation>
+    </citations>
+</tool>
