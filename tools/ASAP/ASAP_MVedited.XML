@@ -1,0 +1,127 @@
+<tool id="ASAP" name="ASAP" version="0.2.1+galaxy0" python_template_version="3.8" profile="22.05">
+  <description>Agglomerate Specimens by Automatic Processing</description>
+    <requirements></requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        $__tool_directory__/asap 
+           #if $opts.isMega: 
+             -m 
+          #end if
+          #if $opts.output_all: 
+             -a
+          #end if
+#* broken
+          #if $distance=="-d 0": 
+             -t $opts.transition 
+          #end if
+*#
+          $distance
+          #if $opts.replicates!=1000: 
+            -r $opts.replicates
+          #end if
+          #if $opts.results!=10:
+            -n $opts.results
+          #end if
+          #if $opts.pvalue!=0.001:
+            -b $opts.pvalue
+          #end if
+#* broken
+          #if $seed!=-1: 
+             -x $opts.seed 
+          #end if
+*#
+          '$input1' 
+          #if $spart_only: 
+            >'$output1'&&
+          #else
+            &>'$output1'&&
+          #end if
+         cp *.spart '$output2'
+         #if $spart_only: 
+           &&
+           rm -f *.txt *.svg *.all
+          #end if
+          
+    ]]></command>
+    <inputs>
+        <param  type="data" name="input1" label="Source file" format="fasta,phylip,csv" />
+        <param name="spart_only" type="boolean" label="Only spart files" checked="true" help="Only the spart output is collected" />
+        <param name="distance" type="select" label="Distance">
+           <option value="-d 1">Jukes-Cantor</option>
+           <option value="-d 0">Kimura-2P</option>
+           <option value="-d 3">simple distance</option>
+         </param>
+        <section name="opts" title="Advanced options">
+          <param name="output_all" type="boolean" label="Output all files"  help="all probabilities, tree and graph files (default only graph files and 10 best agglomerations)" />
+          <param name="transition" type="float" label="transition/transversion"  value="2" help="(not used/broken) for Kimura (default is 2) " />       
+          <param name="replicates" type="integer" label="number of replicates"  value="1000" help="for statistical tests (default is 10^3) " />
+          <param name="pvalue" type="float" label="Pvalue"  value="0.001" help="Threshold for results to be reported (default is 0.001)"/>       
+          <param name="seed" type="float" label="Seed"  value="-1" help="(not used/broken) Fixed seed for random generator (default -1 = random seed)"/>       
+          <param name="results" type="integer" label="number of results"  value="10" help="best results to be reported (default is 10)" />        
+          <param name="isMega" type="boolean" label="MEGA distance file" help="see MEGA information below" />
+
+        </section>
+    </inputs>
+    <outputs>
+      <data name="output1" label="${os.path.splitext(os.path.basename($input1.name))[0]}.log" format="txt">
+        <filter> spart_only is False</filter> 
+      </data>
+      <data name="output2" label="${os.path.splitext(os.path.basename($input1.name))[0]}.spart" format="spart"/>
+      <data name="report" label="ASAP: ${os.path.splitext($input1.name)[0]}" format="svg" metadata_source="$input1">
+        <discover_datasets pattern="(?P&lt;designation&gt;.+)\.svg" ext="svg" visible="true" />      
+        <discover_datasets pattern="(?P&lt;designation&gt;.+)\.all" ext="tsv" visible="true" />  
+        <discover_datasets pattern="groupe" ext="txt" visible="false" />      
+        <filter> spart_only is False</filter> 
+      </data>
+</outputs>
+<tests>
+    <test>
+        <param name="input1" value="ASAP_examplefile1_LophiotomaCOI_iTaxoTools_0_1.fas"/>
+        <param name="replicates" value="1000"/>
+        <param name="results" value="10"/>
+        <param name="distance" value="-d 1"/>
+        <param name="spart_only" value="false"/>
+        <param name="output_all" value="false"/>
+        <output name="output1">
+          <assert_contents>
+            <has_text text="asap has finished building and testing all partitions"/>
+          </assert_contents> 
+        </output>
+    </test>
+</tests>
+
+
+
+    <help><![CDATA[
+*Notes for Galaxy wrapper: Only tested for fasta alignment files. Transition and seed parameters are not currently supported. Tamura-Nei distance calculation is either really slow or broken. Please don't use.  - F.Fischell*
+GUI versions for Windows an Linux are available at https://github.com/iTaxoTools/iTaxoTools-Executables/releases
+From original readme (Puillandre, N., Brouillet, S., & Achaz, G):
+Source file  must be one of these files:
+  - fasta alignment
+  - phylip distance file
+  - MEGA distance file (see MEGA information below)
+**Results:**
+ASAP will print on screen the number of best results you choosed with -b option or the 10 best if no value is specified
+It will produce some other files as 2 graphics files 
+**Information**
+This software is delivered with  BIONJ C source code very slightly modified to construct the newick tree.
+You can get more information on BIONJ here:
+BIONJ: an improved version of the NJ algorithm based on a simple model of sequence data." 
+Gascuel O. Molecular Biology and Evolution. 1997 14:685-695
+**MEGA information**
+Two MEGA distance files are read: 
+CVS file (default MEGA 5) 
+You must specify a -m option on command line with this type of file
+default MEGA 4
+This mega format is assumed  as soon as the "#mega" keyword is present on 1st line
+Some variations are tolerated in this latter format, but if you get an error you should try to stick to one above.
+    ]]>
+  </help>
+  <citations>
+    <citation type="doi">
+      10.1111/1755-0998.13281
+    </citation>
+    <citation type="doi">
+        10.11646/megataxa.6.2.1 
+    </citation>
+  </citations>
+</tool>
