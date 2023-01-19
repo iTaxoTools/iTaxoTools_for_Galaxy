@@ -44,16 +44,30 @@
     </tests> 
     <help><![CDATA[
 **latlon-converter**
-Converts latitude and longitude into a stardard form
+A program to convert latitude and longitude from different formats into decimal format.
+Written by V. Kharchev in the framework of the iTaxoTools project.
+Galaxy wrapper by F. Fischell.
+
+Standalone executables with graphical user interface of the newest version of ASAP for Windows and Mac are available from:
+http://itaxotools.org/
+https://github.com/iTaxoTools/iTaxoTools-Executables/releases
+
+For more information, see the iTaxoTools manual available at:
+http://itaxotools.org/
+
+
+**Usage:**
+
+The input file should contain coordinates in maximum two (tab-separated) columns. First line can be a heading with column headings being
+one of: 'lat', 'latitude', 'lon', 'longitude', 'latlon', 'lonlat', 'lat-lon', 'lon-lat'. See the iTaxoTools manual for more precise information on the format. 
+
+The output file is a tab-separated table with original coordinates and standard decimal formattings of them.
+
 Input may be ANSI (Windows ISO-8859-1) or UTF-8 (Linux) encoded. Output will be UTF-8 (default) or both. 
 Galaxy can  display the UTF-8 output,  ANSI can only be downloaded.
 
-The input file should contain coordinates in maximum two (tab-separated) columns. First line can be a heading with column headings being
-one of: 'lat', 'latitude', 'lon', 'longitude', 'latlon', 'lonlat', 'lat-lon', 'lon-lat'.
 
-The output file is a tab-separated table with original coordinates and standard formattings of them.
 
-GUI versions for Windows an Linux are available at https://github.com/iTaxoTools/iTaxoTools-Executables/releases
 
     ]]></help>
   <citations>
