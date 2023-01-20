@@ -2,6 +2,7 @@
   <description>Agglomerate Specimens by Automatic Processing</description>
     <requirements></requirements>
     <command detect_errors="exit_code"><![CDATA[
+        cp '$input1' '${os.path.splitext(os.path.basename($input1.name))[0]}' &&
         $__tool_directory__/asap 
            #if $opts.isMega: 
              -m 
@@ -25,23 +26,28 @@
             -b $opts.pvalue
           #end if
 #* broken
+
           #if $seed!=-1: 
              -x $opts.seed 
           #end if
+
 *#
 
-          '$input1' 
+          '${os.path.splitext(os.path.basename($input1.name))[0]}'
           #if $spart_only: 
-            >'$output1'&&
+           -u &>'$output1'&&
           #else
             &>'$output1'&&
           #end if
-         cp *.spart '$output2'
+         cp *.spart '$output2' &&
+         cp *.xml '$output3'
+
+#*
          #if $spart_only: 
            &&
            rm -f *.txt *.svg *.all
           #end if
-          
+*#          
 
     ]]></command>
     <inputs>
@@ -68,10 +74,13 @@
         <filter> spart_only is False</filter> 
       </data>
       <data name="output2" label="${os.path.splitext(os.path.basename($input1.name))[0]}.spart" format="spart"/>
+      <data name="output3" label="${os.path.splitext(os.path.basename($input1.name))[0]}.xml" format="xml"/>
       <data name="report" label="ASAP: ${os.path.splitext($input1.name)[0]}" format="svg" metadata_source="$input1">
         <discover_datasets pattern="(?P&lt;designation&gt;.+)\.svg" ext="svg" visible="true" />      
+        <discover_datasets pattern="(?P&lt;designation&gt;.+)\.csv" ext="csv" visible="true" />  
+        <discover_datasets pattern="(?P&lt;designation&gt;.+)\.txt" ext="txt" visible="true" />  
         <discover_datasets pattern="(?P&lt;designation&gt;.+)\.all" ext="tsv" visible="true" />  
-        <discover_datasets pattern="groupe" ext="txt" visible="false" />      
+        <discover_datasets pattern="partition" ext="txt" visible="true" />      
         <filter> spart_only is False</filter> 
       </data>
 </outputs>
@@ -94,47 +103,58 @@
 
 
     <help><![CDATA[
-*Notes for Galaxy wrapper: Only tested for fasta alignment files. Transition and seed parameters are not currently supported. Tamura-Nei distance calculation is either really slow or broken. Please don't use.  - F.Fischell*
+**About ASAP:**
 
-GUI versions for Windows an Linux are available at https://github.com/iTaxoTools/iTaxoTools-Executables/releases
+*This Galaxy version is based on the ASAP version from October 2022.* 
 
-From original readme (Puillandre, N., Brouillet, S., & Achaz, G):
+*Notes on Galaxy wrapper: Developed by F. Fischell in the framework of the iTaxoTools project in 2022/2023. Only tested for fasta alignment files. Transition and seed parameters are not currently supported. Tamura-Nei distance calculation is either really slow or broken, we recommend not using it.*
 
-Source file  must be one of these files:
-  - fasta alignment
-  - phylip distance file
-  - MEGA distance file (see MEGA information below)
+Standalone executables with graphical user interface of the newest version of ASAP are available for Windows and Mac from:
 
+http://itaxotools.org/
 
-**Results:**
-ASAP will print on screen the number of best results you choosed with -b option or the 10 best if no value is specified
-It will produce some other files as 2 graphics files 
+https://github.com/iTaxoTools/iTaxoTools-Executables/releases
 
-
-**Information**
-
-This software is delivered with  BIONJ C source code very slightly modified to construct the newick tree.
-
-You can get more information on BIONJ here:
-BIONJ: an improved version of the NJ algorithm based on a simple model of sequence data." 
-Gascuel O. Molecular Biology and Evolution. 1997 14:685-695
-
-**MEGA information**
-Two MEGA distance files are read: 
+For detailed instructions on the use of ASAP and interpretation of results, see the iTaxoTools manual available at:
+http://itaxotools.org/
 
 
-CVS file (default MEGA 5) 
+**Source files:**
+ASAP accepts three kinds of source files:
 
-You must specify a -m option on command line with this type of file
+- fasta alignment
+- phylip distance file
+- MEGA distance file (see MEGA information below)
+
+*Note: this Galaxy version has only been tested with fasta alignments  which we assume are the most common input files used. Refer to the standalone version or the ASAP website if you experience problems with other kinds of input files in the Galaxy version.*
+
+**Purpose and results of ASAP analyses:**
+
+ASAP is a program for species delimitation that uses genetic distances  derived from single-locus DNA sequence alignments to calculate species partitions. ASAP starts from genetic distances calculated between pairs of sequences, and successively groups them, first grouping the sequences with the least genetic distance, until all the sequences are clustered in a single group (i.e. following a hierarchical clustering approach). At each step where a new grouping occurs, ASAP will consider the corresponding partition and calculate a score, that is a combination of the probability of panmixia and the width of the barcode gap: the lower the score, the better the partition.
+Each species partition consists of various subsets of individuals (sequences) that can be considered as primary species hypotheses. 
+
+*Note 1: ASAP results should not be used to draw final taxonomic conclusions; primary species hypotheses derived from an ASAP analysis should always be confronted with additional lines of evidence, and should be used for proposing changes in the taxonomy of a group of organisms only if confirmed by such additional evidence (secondary species hypotheses).*
+
+*Note 2: Partitions can be ranked according to ASAP scores (the lowest score marks the best partition) but depending on other lines of evidence, users may favor/select any of the other partitions.*
+
+**Output:**
+
+ASAP outputs a variety of files:
+
+- Several graphs in SVG format. These cannot be visualized in Galaxy, but can be downloaded and opened in a browser or graphics program.
+- A log file. 
+- The calculated species partitions in SPART and SPART-XML format (Miralles et al. 2021)
+- Separate text and table files for each species partition, with information on the assignment of individuals to subsets, andprobabilities and ASAP scores (the lowest ASAP score marks the best partition).
 
 
-default MEGA 4
+*Note: By default, the Galaxy version only outputs SPART and SPART-XML files to avoid cluttering the results panel with too many files. Change the sliding button for additional output. For additional detailed output and settings, use Advanced Options.* 
 
-This mega format is assumed  as soon as the "#mega" keyword is present on 1st line
-Some variations are tolerated in this latter format, but if you get an error you should try to stick to one above.
     ]]>
   </help>
   <citations>
+    <citation type="doi">
+      10.1111/1755-0998.13470
+    </citation>
     <citation type="doi">
       10.1111/1755-0998.13281
     </citation>
