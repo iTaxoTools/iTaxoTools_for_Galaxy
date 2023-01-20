@@ -46,7 +46,7 @@
 **latlon-converter**
 A program to convert latitude and longitude from different formats into decimal format.
 Written by V. Kharchev in the framework of the iTaxoTools project.
-Galaxy wrapper by F. Fischell.
+Galaxy wrapper for Latlonconverter 0.1 written in 2022/2023 by F. Fischell.
 
 Standalone executables with graphical user interface of the newest version of ASAP for Windows and Mac are available from:
 http://itaxotools.org/
