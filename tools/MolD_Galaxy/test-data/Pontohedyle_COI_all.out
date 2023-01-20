@@ -1,0 +1,69 @@
+<h4>########################## PARAMETERS ######################</h4>
+<p> input file: D:\MOLD3\Pontohedyle_COI.fas </p>
+<p> Coding gaps as characters: False </p>
+<p> Maximum undetermined nucleotides allowed: 100 </p>
+<p> Length of the alignment: 655 -> 655 </p>
+<p> Indexing reference: Not set </p>
+<p> Read in 27 sequences </p>
+<p> query taxa: 4 - neridae, verrucosa, wiggi, neridae+wiggi+verrucosa </p>
+<p> Cutoff set as: >1 </p>
+<p> Number iterations of MolD set as: 10000 </p>
+<p> Maximum length of raw mDNCs set as: 12 </p>
+<p> Maximum length of refined mDNCs set as: 5 </p>
+<p> simulated sequences up to 1.0 percent divergent from original ones </p>
+<p> Maximum number of sequences modified per clade 10 </p>
+<p> scoring of the rDNCs; threshold in two consequtive runs: 75 </p>
+<h4>########################### RESULTS ##########################</h4>
+<h4>************** neridae **************</h4>
+<p> Sequences analyzed: 1 </p>
+<p> single nucleotide mDNCs*: 13 - 46: 'C', 151: 'C', 169: 'G', 220: 'A', 277: 'C', 278: 'T', 289: 'T', 391: 'C', 397: 'G', 421: 'C', 479: 'T', 505: 'A', 601: 'C' </p>
+<p> mDNCs* retrieved: 7071; Sites involved: 299; Independent mDNCs**: 105 </p>
+<p> Shortest retrieved mDNC*: [46: 'C'] </p>
+<p> 1 rDNC_score (100): [46] - 86 </p>
+<p> 2 rDNC_score (100): [46, 151] - 93 </p>
+<p> Final rDNC***: [46: 'C', 151: 'C'] </p>
+<p> The DNA diagnosis for the taxon neridae is: 'C' in the site 46, 'C' in the site 151. </p>
+<h4>************** verrucosa **************</h4>
+<p> Sequences analyzed: 7 </p>
+<p> single nucleotide mDNCs*: 5 - 118: 'A', 343: 'G', 367: 'C', 421: 'A', 451: 'C' </p>
+<p> mDNCs* retrieved: 5964; Sites involved: 239; Independent mDNCs**: 69 </p>
+<p> Shortest retrieved mDNC*: [118: 'A'] </p>
+<p> 1 rDNC_score (100): [118] - 65 </p>
+<p> 2 rDNC_score (100): [118, 343] - 94 </p>
+<p> 3 rDNC_score (100): [118, 343, 367] - 97 </p>
+<p> Final rDNC***: [118: 'A', 343: 'G', 367: 'C'] </p>
+<p> The DNA diagnosis for the taxon verrucosa is: 'A' in the site 118, 'G' in the site 343, 'C' in the site 367. </p>
+<h4>************** wiggi **************</h4>
+<p> Sequences analyzed: 4 </p>
+<p> single nucleotide mDNCs*: 3 - 127: 'C', 325: 'A', 583: 'C' </p>
+<p> mDNCs* retrieved: 6841; Sites involved: 281; Independent mDNCs**: 86 </p>
+<p> Shortest retrieved mDNC*: [127: 'C'] </p>
+<p> 1 rDNC_score (100): [127] - 80 </p>
+<p> 2 rDNC_score (100): [127, 325] - 94 </p>
+<p> Final rDNC***: [127: 'C', 325: 'A'] </p>
+<p> The DNA diagnosis for the taxon wiggi is: 'C' in the site 127, 'A' in the site 325. </p>
+<h4>************** neridae+wiggi+verrucosa **************</h4>
+<p> Sequences analyzed: 12 </p>
+<p> single nucleotide mDNCs*: 0 -  </p>
+<p> mDNCs* retrieved: 3251; Sites involved: 96; Independent mDNCs**: 17 </p>
+<p> Shortest retrieved mDNC*: [59: 'T', 91: 'T'] </p>
+<p> 2 rDNC_score (100): [91, 196] - 0 </p>
+<p> 3 rDNC_score (100): [91, 196, 259] - 68 </p>
+<p> 4 rDNC_score (100): [91, 196, 259, 94] - 90 </p>
+<p> 5 rDNC_score (100): [91, 196, 259, 94, 538] - 92 </p>
+<p> Final rDNC***: [91: 'T', 94: 'T', 196: 'A', 259: 'A', 538: 'A'] </p>
+<p> The DNA diagnosis for the taxon neridae+wiggi+verrucosa is: 'T' in the site 91, 'T' in the site 94, 'A' in the site 196, 'A' in the site 259, 'A' in the site 538. </p>
+<h4> ################################# EXPLANATIONS #################################### </h4>
+<p>   * mDNC -(=minimal Diagnostic nucleotide combination) is a combination of nucleotides at specified sites of the alignment, </p>
+<p>     unique for a query taxon. Therefore it is sufficient to differentiate a query taxon from all reference taxa in a dataset. </p>
+<p>     Because it comprises minimal necessary number of nucleotide sites to differentiate a query, any mutation in the mDNC in</p>
+<p>     single specimen of a query taxon will automatically disqualify it as a diagnostic combination. </p>
+<p> </p>
+<p>  ** two or more mDNCs are INDEPENDENT if they constitute non-overlapping sets of nucleotide sites. </p>
+<p> </p>
+<p> *** rDNC -(=robust/redundant Diagnostic nucleotide combination) is a combination of nucleotides at specified sites of the alignment, </p>
+<p>     unique for a query taxon and (likewise mDNC) sufficient to differentiate a query taxon from all reference taxa in a dataset. </p>
+<p>     However, rDNC comprises more than a minimal necessary number of diagnostic sites, and therefore is robust to single nucleotide </p>
+<p>     replacements. Even if a mutation arises in one of the rDNC sites, the remaining ones will (with high probability) remain sufficient  </p>
+<p>     to diagnose the query taxon </p>
+<h4>     Final diagnosis corresponds to rDNC </h4>

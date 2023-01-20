@@ -5,65 +5,75 @@
     <command detect_errors="exit_code"><![CDATA[
       echo -e "INPUT_FILE=$input1 \n
                OUTPUT_FILE=$output1 \n
-               qTAXA=$show_select.taxa \n
-               Taxon_rank=$rank \n
-               Gaps_as_chars=$gaps \n
-               Cutoff=$adv_opt.cutoff \n
-               NumberN=$adv_opt.numn \n
-               Number_of_iterations=$adv_opt.numi \n
-               MaxLen1=$adv_opt.maxlen1 \n
-               MaxLen2=$adv_opt.maxlen2 \n
-               Pdiff=$adv_opt.pdiff \n
-               PrSeq=$adv_opt.PrSeq \n
-               NMaxSeq=$adv_opt.nmaxseq \n
-               Scoring=$adv_opt.scoring \n" >params.txt &&
+               qTAXA= 
+               #if $pattern !="*" and not $pattern_merged 
+                P:$pattern \n
+               #elif $pattern_merged
+                 P+:$pattern  \n
+               #elif $morethanN > 0
+                  >$morethanN \n
+               #else
+                 $select_taxa.taxa_select   \n
+               #end if
+                Taxon_rank=$rank \n
+                Gaps_as_chars=$gaps \n
+                Cutoff=$adv_opt.cutoff \n
+                NumberN=$adv_opt.numn \n
+                Number_of_iterations=$adv_opt.numi \n
+                MaxLen1=$adv_opt.maxlen1 \n
+                MaxLen2=$adv_opt.maxlen2 \n
+               #if $adv_opt.iref=="NO"
+                 Iref=$adv_opt.iref \n
+               #elif $adv_opt.iref_mode
+                 Iref=$adv_opt.iref, in  \n
+               #else
+                 Iref=$adv_opt.iref, ex  \n
+               #end if
+                Pdiff=$adv_opt.pdiff \n
+                PrSeq=$adv_opt.PrSeq \n
+                NMaxSeq=$adv_opt.nmaxseq \n
+                Scoring=$adv_opt.scoring \n" >params.txt &&
 
-       $__tool_directory__/MolD_Galaxy -i params.txt >$output2
-
+       python $__tool_directory__/MolD_v1.4.py -i params.txt >$output2
+      
     ]]></command>
 
-
     <inputs>
-      <param  type="data" name="input1" label="Source file" format="fasta,phylip,csv" />
-      <conditional name="show_select">
-        <param name="all_taxa"  type="select" display="radio" label="All taxa" help="Set list of the focus taxa">
-          <option value="all">All taxa</option>
-          <option value="select" selected="true">Selected taxa</option>
-      </param>
-
-        <when value="select">
-          <param name="taxa" type="select" display="checkboxes" multiple="true" checked="true" label="Choose taxa">
-            <options from_dataset="input1" startswith=">" >
-               <column name="name" index="0"/>
-               <column name="value" index="0"/>
-               <filter type="multiple_splitter" column="0" separator="|"/>
-               <filter column="0" type="regexp" value=">" keep="false" />
-               <filter column="0" type="sort_by" />
-               <filter type="unique_value" name="unique_taxon" column="0"/>
-            </options>
-         </param>
-         </when>
-         <when value="all">
-          <param name="taxa" type="hidden" value="ALL"/>
-        </when>
-      </conditional>
-      <param name="rank"  type="boolean" checked="true" label="Taxon Rank" truevalue="1" falsevalue="2" help="Set taxon rank: if species true(1), if above species false(2)"/>
-      <param name="gaps"  type="boolean" label="Gaps as chars"  help="Code gaps as characters: yes or no"/>
-      <section name="adv_opt" title="Advanced parameters for pDNC recovery">
-        <param name="cutoff"  type="text" label="Cutoff" value="100" help="Set number of the informative positions to be considered (default 100) or use '> + integer' to set desired cutoff value (for example '> 1')" />
-        <param name="numn" type="integer" label="Number N" value="25" help="Set how many ambiguously called nucleotides are allowed (default 25)" />
-        <param name="numi" type="integer" label="Number i" value="10000" help="Set number recursions of MolD (default 10000)" />
-        <param name="maxlen1" type="integer" label="MaxLen1" value="12" help="Set maximum length for the raw pDNCs (defailt 12)" />
-        <param name="maxlen2" type="integer" label="MaxLen2" value="7" help="Set maximum length for the refined pDNCs (default 7)" />
-        <param name="pdiff"   type="integer" optional="true" label="PDiff" value="" help="Set percent difference between original and modified sequence (default 1 for species-level taxa, 3 for for supraspecific taxa)" />    
-        <param name="PrSeq" type="float" optional="true" label="PrSeq" value="" help="Set proportion of sequences in the dataset to be modified (default 0.5 for species-level, and 0.1 for supraspecific taxa)." />
-        <param name="nmaxseq" type="integer" label="NMaxSeq" value="10" help="Set max number of sequences per taxon to modify (default 10)" />
-        <param  type="select" name="scoring" label="Scoring" help="Set threshold of sDNC rating(default Stringent (90))">
-          <option value="lousy">Lousy (66)</option>
-          <option value="moderate">Moderate (75)</option>
-          <option value="stringent" selected="true">Stringent (90)</option>
-          <option value="very stringent">Very stringent (95)</option>
+      <param  type="data" name="input1" label="Source file" format="fasta" />
+      <section name="select_taxa" title="See taxa for selection">
+        <param name="taxa_select" type="select" display="checkboxes" multiple="true" checked="true" label="Choose taxa to diagnose">
+          <options from_dataset="input1" startswith=">" >
+             <column name="name" index="0"/>
+             <column name="value" index="0"/>
+             <filter type="multiple_splitter" column="0" separator="|"/>
+             <filter column="0" type="regexp" value=">" keep="false" />
+              <filter column="0" type="sort_by" />
+              <filter type="unique_value" name="unique_taxon" column="0"/>
+           </options>
         </param>
+      </section>
+      <param name="morethanN" type="integer" label="N of sequences" value="0" help="Only taxa with more than N sequences are to be diagnosed (overrides selection!)" />
+      <param name="pattern"  type="text" label="Pattern" value="*" help="Only taxa with certain pattern in the taxon name are to be diagnosed (overrides selection!)" />
+      <param name="pattern_merged"  type="boolean" checked="false" label="Merge"  help="Merge taxa with above pattern before diagnosis"/>
+     <param name="rank"  type="boolean" checked="true" label="Taxon Rank" truevalue="1" falsevalue="2" help="Set taxon rank: if species true(1), if above species false(2)"/>
+      <param name="gaps"  type="boolean" label="Gaps as chars"  help="Code gaps as characters: yes or no"/>
+        <section name="adv_opt" title="Advanced parameters for pDNC recovery">
+          <param name="cutoff"  type="text" label="Cutoff" value="100" help="Set number of the informative positions to be considered (default 100) or use '> + integer' to set desired cutoff value (for example '> 1')" />
+         <param name="numn" type="integer" label="Number N" value="5" help="Set how many ambiguously called nucleotides are allowed (default 5)" />
+          <param name="numi" type="integer" label="Number i" value="10000" help="Set number recursions of MolD (default 10000)" />
+         <param name="maxlen1" type="integer" label="MaxLen1" value="12" help="Set maximum length for the raw pDNCs (defailt 12)" />
+         <param name="maxlen2" type="integer" label="MaxLen2" value="7" help="Set maximum length for the refined pDNCs (default 7)" />
+         <param name="iref"  type="text" label="Index reference" value="NO" help="Set a sequence to be used as a reference for site indexing (default NO)" />
+         <param name="iref_mode"  type="boolean" checked="true" label="Index mode"  help="Yes, if seqence will be used for diagnoses calculations or No if seq is to be used for indexin only"/>
+         <param name="pdiff"   type="integer" optional="true" label="PDiff" value="" help="Set percent difference between original and modified sequence (default 1 for species-level taxa, 3 for for supraspecific taxa)" />    
+         <param name="PrSeq" type="float" optional="true" label="PrSeq" value="" help="Set proportion of sequences in the dataset to be modified (default 0.5 for species-level, and 0.1 for supraspecific taxa)." />
+         <param name="nmaxseq" type="integer" label="NMaxSeq" value="10" help="Set max number of sequences per taxon to modify (default 10)" />
+         <param  type="select" name="scoring" label="Scoring" help="Set threshold of sDNC rating(default moderate 75)">
+           <option value="lousy">Lousy (66)</option>
+           <option value="moderate" selected="true">Moderate (75)</option>
+           <option value="stringent" >Stringent (90)</option>
+           <option value="very stringent">Very stringent (95)</option>
+         </param>
       </section>
     </inputs>
 
@@ -74,7 +84,7 @@
     <tests>
       <test>
           <param name="input1" value="Example_input_alignment_Pontohedyle_COI.fas"/>
-          <param name="taxa" value="milaschewitchii,neridae"/>
+          <param name="taxa_select" value="milaschewitchii,neridae"/>
           <output name="output2">
             <assert_contents>
               <has_text text="milaschewitchii"/>
@@ -102,10 +112,23 @@ The parameter file is created by MolD-Galaxy according to the selected values or
   - OUTPUT_FILE=result.txt
 
 *SET TAXON PARAMETERS* (NO DEFAULTS, no parameters entered will lead to an error).
+qTAXA (Query taxa)
 
-  - Set list of the focus taxa (enter a comma separated list WITHOUT SPACES)
-  - or if each taxon is to be diagnosed, enter 'ALL'
-  - or if all taxa with more than N sequences available (where N is a natural number), enter >N
+::
+
+  ALL	-if all taxa in the dataset are to be diagnosed.
+  >N	-if all taxa with more than N sequences available (where N is a natural number) to be diagnosed;
+  Taxon1,Taxon2...	-a comma separated list of taxa to be diagnosed. Please check that all taxa identifiers are provided as in the input alignment;
+  Taxon1+Taxon2...	-will combine all records of the taxa Taxon 1 and Taxon 2 (or more) in a combined taxon Taxon1+Taxon2 and diagnose it. Any number of taxa, less than a total number of taxa in a dataset may be combined. Any number of combined taxa may be diagnosed in one run. Combined taxa can be diagnosed in one run alongside with not combined taxa;
+  P:pattern	-if only taxa with certain pattern in the taxon name are to be diagnosed;
+  P+:pattern	-merges all taxa with certain pattern in the taxon name in one combined taxon and diagnoses it;
+  Taxon1VSTaxon2	-identifies diagnostic single nucleotide mDNCs that differentiate Taxon1 from Taxon2; output is written to a separate file ‘Basename_pairwise.out’ derived from the provided name of the output file.
+  Taxon1VSALL	-identifies diagnostic single nucleotide mDNCs that differentiate Taxon1 from every other taxon in a dataset; output is written to a separate file ‘Basename_pairwise.out’;
+  ALLVSALL	-identifies diagnostic single nucleotide mDNCs for all possible taxa pairs in a dataset; output is written to a separate file ‘Basename_pairwise.out’;
+
+Multiple input patterns involving taxa names or ALL can be run together:
+  Taxon1, Taxon2, Taxon1+Taxon2, Taxon1VSTaxon2 – will work;
+  All, AllVSALL – will work too.
 
 qTAXA=ALL
 
