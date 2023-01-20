@@ -116,48 +116,47 @@
     </test>
   </tests> 
     <help><![CDATA[
-Convert between different file formats containing genetic information. 
+
+**DNAconvert**
+A program to convert between different file formats containing DNA sequences. 
+Written by V. Kharchev in the framework of the iTaxoTools project.
+Galaxy wrapper for DNAconvert 0.1 written in 2022/2023 by F. Fischell.
+
+Standalone executables with graphical user interface of the newest version of ASAP for Windows and Mac are available from:
+http://itaxotools.org/
+https://github.com/iTaxoTools/iTaxoTools-Executables/releases
+
+For more information, see the iTaxoTools manual available at:
+http://itaxotools.org/
 
 **Usage**
-usage: DNAconvert [-h] [--cmd] [--allow_empty_sequences] [--informat INFORMAT] [--outformat OUTFORMAT] [infile] [outfile]
-
-positional arguments:
-  - infile                the input file
-  - outfile               the output file
-
-optional arguments:
-::
-
-  -h, --help show this help message and exit
-  --cmd activates the command-line interface
-  --allow_empty_sequences set this to keep the empty sequences in the output file
-  --disable_automatic_renaming disables automatic renaming, may result in duplicate sequence names in Phylip and Nexus files
-  --informat INFORMAT format of the input file
-  --outformat OUTFORMAT format of the output file
-
+- Specify an input file and the input file format, as well as the desired output file format. 
+- DNAconvert will "sanitize" sequence names by replacing special characters by underscores
+- For formats that require unique sequence names, DNAconvert can automatically rename sequnces by adding consecutive numbers to the names
+- An important feature of DNAconvert is the option to use tab-delimited files which allows curating sequence data sets with metadata in spreadsheet editors. Refer to the iTaxoTool manual for details.
 
 **Supported formats**
-::
-
-* `tab`: [Internal tab format][1]
-* `tab_noheaders`: [Internal tab format][1] without headers
+* `tab` = tsv: [Internal tab format][1]  = tab-delimited text
+* `tab_noheaders`: [Internal tab format][1] without headers  = tab-delimited text without headers
 * `fasta`: FASTA format
-* `relaxed_phylip`: relaxed Phylip format
-* `fasta_hapview`: FASTA format for Haplotype Viewer
 * `phylip`: Phylip format
+* `relaxed_phylip`: relaxed Phylip format (with no restriction on the length of sequence names)
+* `fasta_hapview`: FASTA format with sequence names formatted for Haplotype Viewer
 * `fastq`: FASTQ format
-* `fasta_gbexport`: FASTA format for export into Genbank repository
+* `fasta_gbexport`: FASTA format with sequence names adjusted for export into GenBank repository
 * `nexus`: NEXUS format
 * `nexml`: DnaCharacterMatrix in NeXML format
 * `genbank`: Genbank flat file format
 * `mold_fasta`: FASTA format with sequence name matching requirements for the tool MolD *
 
 
-
 **Recognised extension**
-Automatic recognition not available with Galaxy yet. 
+Automatic recognition of file format based on extension in file name not yet available in the Galaxy implementation. 
 
-GUI versions for Windows an Linux are available at https://github.com/iTaxoTools/iTaxoTools-Executables/releases
+
+
+
+
     ]]></help>
     <citations>
 	<citation type="doi">
