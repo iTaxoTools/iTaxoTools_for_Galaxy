@@ -96,7 +96,7 @@
 **About ASAP:**
 
 *This Galaxy version is based on the ASAP version from October 2022.* 
-*Notes on Galaxy wrapper: Developed by F. Fischell in the framework of the iTaxoTools project. Only tested for fasta alignment files. Transition and seed parameters are not currently supported. Tamura-Nei distance calculation is either really slow or broken, we recommend not using it.*
+*Notes on Galaxy wrapper: Developed by F. Fischell in the framework of the iTaxoTools project in 2022/2023. Only tested for fasta alignment files. Transition and seed parameters are not currently supported. Tamura-Nei distance calculation is either really slow or broken, we recommend not using it.*
 
 Standalone executables with graphical user interface of the newest version of ASAP are available for Windows and Mac from:
 http://itaxotools.org/
