@@ -94,7 +94,7 @@
   </tests>
   
     <help><![CDATA[
-**MolD 1.3**
+**MolD 1.4**
 
 Python implementation of DNA diagnoses for pre-defined taxa using a tree independent algorithm to retrieve diagnostic nucleotide 
 characters from monolocus datasets. See the Manual for details:
