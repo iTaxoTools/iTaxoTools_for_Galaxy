@@ -34,7 +34,7 @@
                 NMaxSeq=$adv_opt.nmaxseq \n
                 Scoring=$adv_opt.scoring \n" >params.txt &&
 
-       python $__tool_directory__/MolD_v1.4.py -i params.txt >$output2
+       $__tool_directory__/MolD_v1.4 -i params.txt >$output2
       
     ]]></command>
 
@@ -95,33 +95,48 @@
   
     <help><![CDATA[
 **About MolD**
-* A program to identify robust sets of diagnostic sites for pre-defined taxa from DNA sequences, using a tree independent algorithm to retrieve diagnostic nucleotide 
+
+*A program to identify robust sets of diagnostic sites for pre-defined taxa from DNA sequences, using a tree independent algorithm to retrieve diagnostic nucleotide 
 characters.*
+
 *This Galaxy version implements MolD 1.4, developed 2022.* 
 *MolD was written in Python by Alexander Fedosov.*
 *The Galaxy wrapper was developed by F. Fischell in the framework of the iTaxoTools project in 2022/2023. Only tested for fasta alignment files. Transition and seed parameters are not currently supported. Tamura-Nei distance calculation is either really slow or broken, we recommend not using it.*
+
 Standalone executables with graphical user interface of the newest version of MolD are available for Windows and Mac from:
+
 http://itaxotools.org/
+
 https://github.com/iTaxoTools/iTaxoTools-Executables/releases
+
 For detailed instructions on the use of MolD and interpretation of results, see the iTaxoTools manual available at:
+
 http://itaxotools.org/
+
 
 
 **MolD 1.4**
+
 This program is tailored for seamlessly recovering DNA-based diagnoses from large DNA datasets and is capable of identifying diagnostic combinations of nucleotides (DNCs) in addition to single (pure) diagnostic sites, enabling users to base DNA diagnoses on a minimal number of diagnostic sites necessary for a reliable differentiation of taxa, rather than providing a long list of such sites. 
 The MolD algorithm assembles DNA diagnoses that fulfill pre-defined criteria of reliability, which is achieved by repeatedly scoring diagnostic nucleotide combinations against datasets of in silico mutated sequences. 
 Version 
+
 Version 1.4 has several improved functionalities, in particular the output files produced are better documented and more easy to interpret for unexperienced users. 
 
-* Note: several new features of the version 1.4 od MolD are not yet implemented in the Galaxy version; in particular the option to output lists of pairwise diagnostic sites among nucleotides is missing:*
+*Note: several new features of the version 1.4 od MolD are not yet implemented in the Galaxy version; in particular the option to output lists of pairwise diagnostic sites among nucleotides is missing:*
 
 
-*Input files*
-Input is a fasta file of aligned sequence files (for best performance of the program, without missing data and indels)  where each entry starts with the identifier line, and one or more lines of nucleotide sequence. Identifier line starts with ‘>’ and must contain two parts, separated by a pipe (‘|’) symbol. The first part is a free-style sequence identifier. The names of the taxa to be diagnosed correspond to the second element, i.e., the taxon identifier: >SequenceID####|taxon. The taxon identifier corresponds to the name of the species, genus etc to which you assign this sequence. For more details, see the iTaxoTools manual and example files for MolD at http://itaxotools.org/
+**Input files**
 
-*Settings*
+Input is a fasta file of aligned sequence files (for best performance of the program, without missing data and indels)  where each entry starts with the identifier line, and one or more lines of nucleotide sequence. Identifier line starts with ‘>’ and must contain two parts, separated by a pipe (‘|’) symbol. The first part is a free-style sequence identifier. The names of the taxa to be diagnosed correspond to the second element, i.e., the taxon identifier: >SequenceID####|taxon. The taxon identifier corresponds to the name of the species, genus etc to which you assign this sequence. 
+For more details, see the iTaxoTools manual and example files for MolD at http://itaxotools.org/
+
+**Settings**
+
 1. Specify the taxon rank of your query taxa. In most cases these will correspond to species or species-level OTUs. If your specified taxa instead correspond to supraspecific units such as  genera or species groups, it is useful to change the setting accordingly to "supraspecific taxa" (in the parameter file: 1 for species, 2 for supraspecific taxa). The specified taxon rank will influence the maximum divergence allowed when simulating sequences in the last step in MolD. 
+
 2. Specify if gaps should be coded as characters or as missing data. If specifying “Yes”, dashes (‘-‘) in the alignment are transformed into ‘D’ characters and these treated as independent character states. If specifying “No” dashes are treated as missing data (‘N’). 
+
 3. For advanced settings, see the iTaxoTools manual at http://itaxotools.org/
 
 **Output**

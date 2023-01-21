@@ -1,0 +1,50 @@
+<h4>########################## PARAMETERS ######################</h4>
+<p> input file: test-data/Pontohedyle_COI.fas </p>
+<p> Coding gaps as characters: False </p>
+<p> Maximum undetermined nucleotides allowed: 5 </p>
+<p> Length of the alignment: 655 -> 655 </p>
+<p> Indexing reference: Not set </p>
+<p> Read in 27 sequences </p>
+<p> query taxa: 2 - brasilensis, joni </p>
+<p> Cutoff set as: 100 </p>
+<p> Number iterations of MolD set as: 10000 </p>
+<p> Maximum length of raw mDNCs set as: 12 </p>
+<p> Maximum length of refined mDNCs set as: 7 </p>
+<p> simulated sequences up to 1 percent divergent from original ones </p>
+<p> Maximum number of sequences modified per clade 10 </p>
+<p> scoring of the rDNCs; threshold in two consequtive runs: 75 </p>
+<h4>########################### RESULTS ##########################</h4>
+<h4>************** brasilensis **************</h4>
+<p> Sequences analyzed: 4 </p>
+<p> single nucleotide mDNCs*: 45 - 4: 'G', 16: 'C', 40: 'C', 44: 'G', 46: 'G', 68: 'G', 97: 'C', 101: 'C', 102: 'C', 167: 'G', 169: 'C', 170: 'T', 197: 'A', 202: 'G', 217: 'A', 227: 'G', 228: 'C', 239: 'T', 272: 'G', 287: 'A', 295: 'G', 310: 'C', 332: 'T', 357: 'A', 358: 'G', 365: 'T', 372: 'T', 387: 'C', 434: 'G', 456: 'G', 457: 'G', 467: 'G', 482: 'T', 483: 'G', 497: 'C', 499: 'T', 512: 'T', 518: 'A', 529: 'A', 535: 'G', 542: 'T', 543: 'C', 566: 'C', 619: 'G', 635: 'G' </p>
+<p> mDNCs* retrieved: 1048; Sites involved: 100; Independent mDNCs**: 71 </p>
+<p> Shortest retrieved mDNC*: [4: 'G'] </p>
+<p> 1 rDNC_score (100): [4] - 52 </p>
+<p> 2 rDNC_score (100): [4, 16] - 86 </p>
+<p> 3 rDNC_score (100): [4, 16, 40] - 93 </p>
+<p> Final rDNC***: [4: 'G', 16: 'C', 40: 'C'] </p>
+<p> The DNA diagnosis for the taxon brasilensis is: 'G' in the site 4, 'C' in the site 16, 'C' in the site 40. </p>
+<h4>************** joni **************</h4>
+<p> Sequences analyzed: 3 </p>
+<p> single nucleotide mDNCs*: 10 - 31: 'A', 85: 'G', 160: 'G', 283: 'G', 298: 'G', 451: 'G', 523: 'C', 526: 'A', 578: 'C', 580: 'T' </p>
+<p> mDNCs* retrieved: 2662; Sites involved: 100; Independent mDNCs**: 50 </p>
+<p> Shortest retrieved mDNC*: [31: 'A'] </p>
+<p> 1 rDNC_score (100): [31] - 65 </p>
+<p> 2 rDNC_score (100): [31, 85] - 97 </p>
+<p> 3 rDNC_score (100): [31, 85, 160] - 99 </p>
+<p> Final rDNC***: [31: 'A', 85: 'G', 160: 'G'] </p>
+<p> The DNA diagnosis for the taxon joni is: 'A' in the site 31, 'G' in the site 85, 'G' in the site 160. </p>
+<h4> ################################# EXPLANATIONS #################################### </h4>
+<p>   * mDNC -(=minimal Diagnostic nucleotide combination) is a combination of nucleotides at specified sites of the alignment, </p>
+<p>     unique for a query taxon. Therefore it is sufficient to differentiate a query taxon from all reference taxa in a dataset. </p>
+<p>     Because it comprises minimal necessary number of nucleotide sites to differentiate a query, any mutation in the mDNC in</p>
+<p>     single specimen of a query taxon will automatically disqualify it as a diagnostic combination. </p>
+<p> </p>
+<p>  ** two or more mDNCs are INDEPENDENT if they constitute non-overlapping sets of nucleotide sites. </p>
+<p> </p>
+<p> *** rDNC -(=robust/redundant Diagnostic nucleotide combination) is a combination of nucleotides at specified sites of the alignment, </p>
+<p>     unique for a query taxon and (likewise mDNC) sufficient to differentiate a query taxon from all reference taxa in a dataset. </p>
+<p>     However, rDNC comprises more than a minimal necessary number of diagnostic sites, and therefore is robust to single nucleotide </p>
+<p>     replacements. Even if a mutation arises in one of the rDNC sites, the remaining ones will (with high probability) remain sufficient  </p>
+<p>     to diagnose the query taxon </p>
+<h4>     Final diagnosis corresponds to rDNC </h4>
