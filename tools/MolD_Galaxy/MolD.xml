@@ -94,99 +94,39 @@
   </tests>
   
     <help><![CDATA[
+**About MolD**
+* A program to identify robust sets of diagnostic sites for pre-defined taxa from DNA sequences, using a tree independent algorithm to retrieve diagnostic nucleotide 
+characters.*
+*This Galaxy version implements MolD 1.4, developed 2022.* 
+*MolD was written in Python by Alexander Fedosov.*
+*The Galaxy wrapper was developed by F. Fischell in the framework of the iTaxoTools project in 2022/2023. Only tested for fasta alignment files. Transition and seed parameters are not currently supported. Tamura-Nei distance calculation is either really slow or broken, we recommend not using it.*
+Standalone executables with graphical user interface of the newest version of MolD are available for Windows and Mac from:
+http://itaxotools.org/
+https://github.com/iTaxoTools/iTaxoTools-Executables/releases
+For detailed instructions on the use of MolD and interpretation of results, see the iTaxoTools manual available at:
+http://itaxotools.org/
+
+
 **MolD 1.4**
+This program is tailored for seamlessly recovering DNA-based diagnoses from large DNA datasets and is capable of identifying diagnostic combinations of nucleotides (DNCs) in addition to single (pure) diagnostic sites, enabling users to base DNA diagnoses on a minimal number of diagnostic sites necessary for a reliable differentiation of taxa, rather than providing a long list of such sites. 
+The MolD algorithm assembles DNA diagnoses that fulfill pre-defined criteria of reliability, which is achieved by repeatedly scoring diagnostic nucleotide combinations against datasets of in silico mutated sequences. 
+Version 
+Version 1.4 has several improved functionalities, in particular the output files produced are better documented and more easy to interpret for unexperienced users. 
 
-Python implementation of DNA diagnoses for pre-defined taxa using a tree independent algorithm to retrieve diagnostic nucleotide 
-characters from monolocus datasets. See the Manual for details:
+* Note: several new features of the version 1.4 od MolD are not yet implemented in the Galaxy version; in particular the option to output lists of pairwise diagnostic sites among nucleotides is missing:*
 
-https://github.com/SashaFedosov/MolD/blob/master/MolD_v1_3_manual.pdf
 
-GUI versions for Windows an Linux are available at https://github.com/iTaxoTools/iTaxoTools-Executables/releases
+*Input files*
+Input is a fasta file of aligned sequence files (for best performance of the program, without missing data and indels)  where each entry starts with the identifier line, and one or more lines of nucleotide sequence. Identifier line starts with ‘>’ and must contain two parts, separated by a pipe (‘|’) symbol. The first part is a free-style sequence identifier. The names of the taxa to be diagnosed correspond to the second element, i.e., the taxon identifier: >SequenceID####|taxon. The taxon identifier corresponds to the name of the species, genus etc to which you assign this sequence. For more details, see the iTaxoTools manual and example files for MolD at http://itaxotools.org/
 
-**Quick Reference**
-The parameter file is created by MolD-Galaxy according to the selected values or their defaults.  
+*Settings*
+1. Specify the taxon rank of your query taxa. In most cases these will correspond to species or species-level OTUs. If your specified taxa instead correspond to supraspecific units such as  genera or species groups, it is useful to change the setting accordingly to "supraspecific taxa" (in the parameter file: 1 for species, 2 for supraspecific taxa). The specified taxon rank will influence the maximum divergence allowed when simulating sequences in the last step in MolD. 
+2. Specify if gaps should be coded as characters or as missing data. If specifying “Yes”, dashes (‘-‘) in the alignment are transformed into ‘D’ characters and these treated as independent character states. If specifying “No” dashes are treated as missing data (‘N’). 
+3. For advanced settings, see the iTaxoTools manual at http://itaxotools.org/
 
-*SET INPUT AND OUTPUT FILES (INCLUDING COMPLETE PATH)*
+**Output**
+The  output file summarizes the main output of the MolD algorithm. After recapitulating the main parameter settings, it provides for each of the taxa selected for the analysis, and basoic information for each taxon. Most importantly, the file includes for each taxon a final "robust Diagnostic Nucleotide Combination" (rDNC) as well as a diagnosis text that can be copy-pasted into the respective section of a research paper for the purpose of diagnosing a taxon. Note that the rDNC is a diagnostic combination of positions, i.e., only the combination of the listed positions will provide a robust diagnosis (while each position on its own might or might not be universally diagnostic).
 
-  - INPUT_FILE=Example_input_alignment_Pontohedyle_COI.fas
-  - OUTPUT_FILE=result.txt
-
-*SET TAXON PARAMETERS* (NO DEFAULTS, no parameters entered will lead to an error).
-qTAXA (Query taxa)
-
-::
-
-  ALL	-if all taxa in the dataset are to be diagnosed.
-  >N	-if all taxa with more than N sequences available (where N is a natural number) to be diagnosed;
-  Taxon1,Taxon2...	-a comma separated list of taxa to be diagnosed. Please check that all taxa identifiers are provided as in the input alignment;
-  Taxon1+Taxon2...	-will combine all records of the taxa Taxon 1 and Taxon 2 (or more) in a combined taxon Taxon1+Taxon2 and diagnose it. Any number of taxa, less than a total number of taxa in a dataset may be combined. Any number of combined taxa may be diagnosed in one run. Combined taxa can be diagnosed in one run alongside with not combined taxa;
-  P:pattern	-if only taxa with certain pattern in the taxon name are to be diagnosed;
-  P+:pattern	-merges all taxa with certain pattern in the taxon name in one combined taxon and diagnoses it;
-  Taxon1VSTaxon2	-identifies diagnostic single nucleotide mDNCs that differentiate Taxon1 from Taxon2; output is written to a separate file ‘Basename_pairwise.out’ derived from the provided name of the output file.
-  Taxon1VSALL	-identifies diagnostic single nucleotide mDNCs that differentiate Taxon1 from every other taxon in a dataset; output is written to a separate file ‘Basename_pairwise.out’;
-  ALLVSALL	-identifies diagnostic single nucleotide mDNCs for all possible taxa pairs in a dataset; output is written to a separate file ‘Basename_pairwise.out’;
-
-Multiple input patterns involving taxa names or ALL can be run together:
-  Taxon1, Taxon2, Taxon1+Taxon2, Taxon1VSTaxon2 – will work;
-  All, AllVSALL – will work too.
-
-qTAXA=ALL
-
-*Set taxon rank: if species - 1, if above species - 2.*
-
-Taxon_rank=-1
-
-*Code gaps as characters: 'yes' or 'no'*
-
-Gaps_as_chars=yes
-
-*SET ADVANCED PARAMETERS FOR pDNC RECOVERY.* If you don't want to set them, don't enter anything after '='
-
-  - Set number of the informative positions to be considered, integer (default 100)
-  - or use '>'+integer to set desired cutoff value (for example '> 1')
-  - Cutoff= > 10 needs space between > and 10
-
-Cutoff=100
-
-*Set how many ambiguously called nucleotides are allowed (default 25)*
-
-NumberN=25
-
-*Set number recursions of MolD (default 10000)*
-
-Number_of_iterations=10000
-
-*Set maximum length for the raw pDNCs (default 12)*
-
-MaxLen1=12
-
-#Set maximum length for the refined pDNCs (default 7)
-
-MaxLen2=7
-
-*SET PARAMETERS OF ARTIFICIAL DATASETS (only sDNSs).*
-*Set percent difference between original and modified sequence (default 1 for species-level taxa, 3 for for supraspecific taxa).*
-
-Pdiff=
-
-*Set proportion of sequences in the dataset to be modified (default 0.5 for species-level, and 0.1 f#or supraspecific taxa).*
-
-PrSeq=
-
-*Set max number of sequences per taxon to modify (default 10)*
-
-NMaxSeq=
-
-*Set threshold of sDNC rating(default stringent).*
-100 artificial datasets are created to score the sDNC. If the sDNC remains diagnostic in  requested (defined by value of threshold),
-or higher number of artificial datasets in two consequtive runs, then sDNC is output. The threshold values are like:
-
-  - lousy: 66
-  - moderate: 75
-  - stringent: 90
-  - very_stringent: 95
-
-Scoring=moderate
 
     ]]></help>
       <citations>
