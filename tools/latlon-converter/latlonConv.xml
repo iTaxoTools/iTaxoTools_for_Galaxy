@@ -22,12 +22,12 @@
   </configfiles>
 
     <inputs>
-        <param  type="data" name="input1" label="Input file" format="tabular" />
+        <param  type="data" name="input1" label="Input file" format="tabular,tsv,txt" />
         <param  type="boolean" name="ansi_out" label="Additional ANSI output (default only UTF-8)" />
     </inputs>
     <outputs>
       <data name="output1" label="LatLon: ${os.path.splitext(os.path.basename($input1.name))[0]}_utf8.tab" format="tsv"/>
-      <data name="output2" label="LatLon: ${os.path.splitext(os.path.basename($input1.name))[0]}_ansi.tab" format="data">
+      <data name="output2" label="LatLon: ${os.path.splitext(os.path.basename($input1.name))[0]}_ansi.tab" format="txt">
          <filter>ansi_out</filter> 
       </data>
     </outputs>
@@ -68,6 +68,8 @@ The output file is a tab-separated table with original coordinates and standard 
 
 Input may be ANSI (Windows ISO-8859-1) or UTF-8 (Linux) encoded. Output will be UTF-8 (default) or both. 
 Galaxy can  display the UTF-8 output,  ANSI can only be downloaded.
+
+When uploading the data to Galaxy, make sure to set the datatype to tabular or tsv for UTF-8-files and txt for ANSI files.
 
 
 
