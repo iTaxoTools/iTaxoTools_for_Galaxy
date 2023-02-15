@@ -1,0 +1,122 @@
+<tool id="pyr8s" name="pyr8s" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+<description>Compute timetrees using non-parametric rate-smothing</description>
+    <requirements>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+    python $runme --infile '$input1' --outfile '$output1'
+    #if $params.quick=='do_quick':
+      --quick 'True'
+    #else:
+      --quick 'False'
+      --number_of_guesses '$params.number_of_guesses'
+      --perturb_factor '$params.perturb_factor'
+      --seed '$params.seed'
+      --scalar '$params.scalar'
+      --format '$params.format'
+      --nsites '$params.nsites'
+      --round '$params.round'
+      --max_iterations '$params.max_iterations'
+      --exponent '$params.exponent'
+      --logarithmic '$params.logarithmic'
+      --variable_tolerance '$params.variable_tolerance'
+      --function_tolerance '$params.function_tolerance'
+    #end if 
+
+    &>>'$output0'
+    ]]></command>
+  <configfiles>
+    <configfile name="runme"><![CDATA[
+import sys
+import pyr8s.parse as p
+import argparse
+
+parse_args = argparse.ArgumentParser()
+r8sargs = parse_args.add_argument
+r8sargs('--infile',default='')
+r8sargs('--outfile',default='result.txt')
+r8sargs('--quick',default='True')
+r8sargs('--number_of_guesses',default=1)
+r8sargs('--perturb_factor',default=0.01)
+r8sargs('--seed',default=0)
+r8sargs('--scalar',default='False')
+r8sargs('--format',default='persite')
+r8sargs('--nsites',default=1)
+r8sargs('--round',default='True')
+r8sargs('--max_iterations',default=10)
+r8sargs('--exponent',default=2)
+r8sargs('--logarithmic',default='False')
+r8sargs('--variable_tolerance',default=1e-8)
+r8sargs('--function_tolerance',default=1e-8)
+
+myargs = parse_args.parse_args()
+
+
+if myargs.quick==True:
+  a = p.from_file(myargs.infile, run=True)
+  a.results.print()
+else: 
+ 
+  a = p.from_file(myargs.infile, run=False)
+  a.param.general.number_of_guesses=int(myargs.number_of_guesses)
+  a.param.general.perturb_factor=float(myargs.perturb_factor)
+  a.param.general.seed=int(myargs.seed)
+  a.param.general.scalar=myargs.scalar
+  a.param.branch_length.format=myargs.format
+  a.param.branch_length.nsites=int(myargs.nsites)
+  a.param.branch_length.round=myargs.round
+  a.param.barrier.max_iterations=int(myargs.max_iterations)
+  a.param.method.exponent=int(myargs.exponent)
+  a.param.method.logarithmic=myargs.logarithmic
+  a.param.algorithm.variable_tolerance=float(myargs.variable_tolerance)
+  a.param.algorithm.function_tolerance=float(myargs.function_tolerance)
+  res=a.run()
+  a.results.print()
+  #print(myargs) 
+"""
+a.results.print()  
+a.results.chronogram.print_plot()
+
+"""
+
+outp = open(myargs.outfile,'w')
+outp.write(a.results.chronogram.as_string(schema='newick', suppress_rooting=True))
+]]></configfile>
+  </configfiles>
+
+  <inputs>
+    <param  type="data" name="input1" label="Source file" format="nexus,tree,txt" />
+    <conditional name="params">
+      <param  type="boolean" name="quick" truevalue="do_quick" falsevalue="no_quick" label="Quick run" checked="true"/>
+      <when value='no_quick'>
+        <param type="integer" name="number_of_guesses" label="Number of guesses" help="How many attempts to solve the problem" value="1"/>
+        <param type="float" name="perturb_factor" label="Perturb Factor" help="Maximum perturbation percentage between different guesses." value="0.01"/>
+        <param type="integer" name="seed" label="Seed" help="Seed for the random number generator. Use system time if zero" value="0"/>
+        <param type="boolean" name="scalar" label="Scalar" help="Force root age to 1.0 and ignore all constraints" checked="false"/>
+        <param name="format" type="select" label="Branch Length: Format" help="Per site: Lengths in units of numbers of substitutions per site. Total: lengths have units of total numbers of substitutions. Guess: use rough estimate based on maximum branch length.">
+          <option value="persite">Per site</option>
+          <option value="total">Total</option>
+          <option value="guess">Guess</option>
+        </param>
+        <param type="integer" name="nsites" label="Branch Length: Subs per site" help="Number of sites in sequences that branch lengths on input trees were calculated from" value="1"/>
+        <param type="boolean" name="round" label="Branch Length: Round" help="Discard fractional part. If False, takes longer to diverge." checked="true"/>
+        <param type="integer" name="max_iterations" label="Barrier: Max Iterations" help="Maximum allowed number of iterations for relaxed constrained optimization" value="10"/>
+        <param type="integer" name="exponent" label=" NPRS: Exponent" help="Exponent used in NPRS objective function" value="2"/>
+        <param type="boolean" name="logarithmic" label="NPRS: Logarithmic" help="Logarithmic rate differences"/>
+        <param type="float" name="variable_tolerance" label="Powell: Variable tolerance" help="Powell variable tolerance" value="1e-8"/>
+        <param type="float" name="function_tolerance" label="Powell: Function tolerance" help="Powell function tolerance" value="1e-8"/>
+      </when>
+      <when value='do_quick'>
+      </when>
+    </conditional>
+  </inputs>
+
+  <outputs>
+      <data name="output0" label="pyr8s: ${os.path.splitext(os.path.basename($input1.name))[0]}.log" format="txt" />
+      <data name="output1" label="pyr8s: ${os.path.splitext(os.path.basename($input1.name))[0]}_newick" format="newick" />
+
+    </outputs>
+
+    <help><![CDATA[
+
+    ]]></help>
+</tool>

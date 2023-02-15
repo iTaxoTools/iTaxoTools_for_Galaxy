@@ -1,0 +1,170 @@
+Limes v2.0.1
+------------	10/04/2021
+
+Ajout du type checking
+- Tous les modules non graphiques sont annotés pour type checking, et contrôlés par mypy.
+- Les modules faisant appels à tkinter ne sont pas type checkés pour le moment.
+
+Passage à la version 2.0.1 de xlrd, laquelle est plus compatible avec les versions
+récentes de Python, mais ne traite plus que les .xls et pas les .xlsx.
+En conséquence, ajout de l'utilisation de openpyxl pour les .xlsx. Ajout du reader
+calc.Reader_excelx.
+
+Ajout de l'option -h à la ligne de commande, et de la version anglaise (-hh) du texte d'aide.
+
+Limes v2.0
+----------	29/03/2021
+
+Principales nouveautés :
+- Changement complet de l'ergonomie de l'interface. Les fonctionnalités de Limes v1.3
+	sont cependant reconduites.
+- On peut charger désormais plusieurs fichiers et combiner les méthodes provenant
+	de ces divers fichiers.
+- Introduction du format Spart, en import et en export.
+
+Fichiers CSV et Excel :
+- On peut avoir des échantillons non inclus dans une méthode : la cellule correspondante
+	doit contenir "-" ou "?".
+- Les classes Reader_csv et Reader_excel ont un paramètre supplémentaire "redond". Si True,
+	accepte les noms d'échantillon et de méthode redondants, en les renumérotant. Ceci
+	est conforme au fonctionnement des versions antérieures. Si False, les redondances
+	génèrent une exception ; l'interface graphique ou en ligne de Limes 2.0 force ce
+	mode (l'option redond n'est pas disponible en paramétrage).
+
+Espace et Methode :
+- Changement de la classe Espace, qui accueille des méthodes provenant de divers fichiers.
+	Elle fait le travail de l'ancienne classe Espace_monofmt, qui disparaît.
+- Les Methode sont maintenant des dict Echantillon->code_espèce. Auparavant, elles étaient
+	des tuples des Echantillon, les codes epsèces étant portés par une liste en attribut.
+	Noter que ceci est possible parce que les dict Python sont maintenant ordonnés.
+- Introduction des pEchantillon et des pMethode. Les Echantillon et Methode sont créés à la
+	lecture d'un fichier, laquelle est synthétisée dans une instance de Source. Pour
+	être utilisées par les divers traitements (partitions, indices, export), les methodes
+	doivent être groupées en un Espace. Chaque Methode y est représentée par une pMethode,
+	qui implémentent de nouvelles fonctions (.especes), et les Echantillon sont représentés
+	par des pEchantillon. Dans un Espace, on a la garantie que chaque échantillon est
+	représenté par une seule instance de pEchantillon : les tests d'égalité reviennent
+	donc à des tests d'identité.
+
+Interface :
+- Les fonctions d'export de Partition ne sont pas reconduites (car elles peuvent faire exploser
+	le programme si le combinatoire est trop importante).
+- On peut ouvrir plusieurs fenêtres Partitions ou Indices. Dans Limes v1.3, on ne pouvait en ouvrir
+	qu'une seule.
+
+Limes v1.3c
+-----------	11/09/2020
+
+- Correction d'un bug dans la version en mode ligne, pour les fichiers .csv.
+
+Limes v1.3b
+-----------	07/08/2019, puis version finale 18/09
+
+- Assouplissement et ajout de rigueur dans la syntaxe acceptée pour les fichiers
+	mono-méthodes.
+- Un document Limes-spécifications.V2.pdf décrit précisément cette syntaxe.
+
+Détails :
+
+- Réécriture des Expressions Régulières et de l'algorithme d'analyse de ces fichiers.
+- Ajout de contrôles internes : champs "n:" dans le format ABGD, présence d'au moins
+	une ligne utile pour prétendre avoir identifié le type du fichier, codes
+	espèces redondants pour ABGD et PTP.
+- Si le nom original ne diffère du nom normalisé que par la casse, on n'affiche que le nom
+	original, et non plus la forme "nom_original<nom_normalisé>".
+- Rejet du chargement si aucun spécimen commun.
+- Un Label "select ->" dans le coin NW de la fenêtre Partitions.
+
+Limes v1.3
+----------	15/07/2019
+
+- Prise en compte de formats mono-méthode : ABGD, PTP, GMYC.
+	- Ajout des items [Fichier Excel ou CSV] et [Fichier ABGD, PTP, GMYC]
+		dans le menu [Fichier].
+	- Affichage des échantillons écartés éventuels.
+- Ajout de l'item [Enregistrer les données] dans le menu [Fichier].
+- Adaptation de la version ligne de commande pour adopter aussi ces nouveautés :
+	liste de fichiers mono-méthode, option -d.
+
+Détails :
+
+- Réorganisation de l'ensemble des modules en un package "limes". Le programme lui-même
+	(exécution en ligne ou lancement de l'interface) est implémenté dans __main__.py.
+
+- Ajout du module monofmt.py, qui assure le chargement des fichiers au format
+	mono-méthode. La fonction Espace_monofmt() crée un Espace à partir de ces
+	Methode disparate, en assurant la correspondance. Le Espace créé est ensuite
+	tout à fait compatible avec le Espace créé en mode Excel/csv -> le reste des
+	calculs ne fait pas la distinction.
+- Changement de la structure des Espace et Methode : anciennement dict, ils
+	deviennent des tuple. Pour les Methode, la liste des codes espèces
+	est maintenue dans l'attribut .codesespeces.
+- Implémentation plus stricte des Echantillon et Methode en tant qu'objets
+	hashable ; définition plus rigoureuse des noms .eff_nom et .orig_nom.
+	Toutes les références et correspondances se font maintenant sur leur valeur,
+	qui est .eff_nom, et non plus sur leur identité. Les Echantillon sont les
+	mêmes objets pour toutes les Methode en mode Excel/csv, mais ce n'est pas le
+	cas en mode monofmt.
+- L'ordre des Echantillon dans les diverses Methode d'un même Espace n'est plus
+	forcément le même (l'ordre était le même en mode Excel/csv,mais il devient aléatoire
+	avec les formats mono-méthode). L'ordre adopté pour les restitutions est celui de la
+	première Methode, mais les algorithmes de calcul et de restitution ont dû être adaptés
+	au fait que l'ordre des Methode est aléatoire.
+- Adaptation de test_limes.py à ces évolutions de structure, en plus de l'ajout des tests
+	des nouveaux formats.
+- Nécessite Python v3.6 au minimum.
+
+Limes v1.2
+----------	11/02/2019
+
+- Introduction du calcul des partitions.
+- Choix du caractère séparateur pour les fichiers CSV.
+
+Détails :
+
+- Ajout des modules labeltableur (tableur à base de Label, non spécifique limes)
+	et partitions (affiche la fenêtre des partitions).
+- limes :
+	Les échantillons sont maintenant représentés par une classe Echantillon.
+	Le nom recalculé (doublon) est conservé, mais ne semble plus utilisé.
+	Ajout de la fonction communes() pour calculer les partitions.
+	Methode.especes est maintenant un tuple et non plus un set.
+	Ajout de la gestion du délimiteur dans Reader_csv.
+- wlimes :
+	Ajout du menu [Partitions].
+	Ajout du label [CSV].
+
+Version corrective du 20/02/2019 :
+
+- Remplacement du labeltableur par le canvastableur.
+- Portage sur Mac.
+
+Limes v1.1
+----------	21/01/2018
+
+- Introduction du match ratio.
+- Introduction des collimateurs.
+
+Détails :
+
+limes :
+
+- Traite les cas où le dénominateur du Ctax vaut 0.
+	- Ctax est affiché N/A (en fractionnaire et en flottant).
+	- Ce Ctax n'est pas pris en compte dans le calcul du mCtax.
+- Introduction du match ratio.
+- Lors du renommage automatique, les codes créés ont toujours le même nombre de
+	caractères (numéro justifié par des 0), et sont dans l'ordre des colonnes
+	du fichier d'origine.
+- L'ordre des méthodes est conservé, de gauche à droite et de haut en bas.
+
+wlimes :
+
+- La sauvegarde est déplacée dans un item du menu [Fichier].
+- Introduction des collimateurs fixe et mobile, et de la case à cocher
+	[Collimateur].
+- Introduction du match ratio, et du radio-bouton permettant de choisir entre
+	les deux algorithmes.
+
+Limes v1
+--------	05/12/2017

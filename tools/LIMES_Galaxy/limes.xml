@@ -1,0 +1,83 @@
+<tool id="LIMES" name="LIMES" version="0.1.0" python_template_version="3.5" profile="21.05">
+    <requirements>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+           $__tool_directory__/bootlimes
+           '$action'
+           #if $match_ratios
+             -m 
+          #end if
+           #if $action=="-O"
+             '$outformat'
+          #end if
+          #for $input1 in $inputs1:
+            $input1
+          #end for   
+          > $output1
+    ]]></command>
+    <inputs>
+          <param name="action" type="select" label="Action" display="radio">
+               <option value="-I">Calculate indicies</option>
+               <option value="-O">Merge input files</option>
+               <option value="-C">Check file</option>        
+          </param>     
+        <param  type="data" name="inputs1" multiple="true"  label="Source file" format="txt"/>
+        <param name="outfile1" type="text" label="Name of output" value="LIMES_output" />
+
+          <param name="outformat" type="select" label="Action" display="radio">
+               <option value="spart">Save merged files as spart</option>
+               <option value="csv">Save merged files as csv</option>
+          </param>     
+        <param name="match_ratios" type="boolean" label="Match ratios" help="Calculates and displays match ratios instead of cTax." />
+    </inputs>
+    <outputs>
+      <data name="output1" label="${os.path.splitext(os.path.basename($inputs1[0].name))[0]}_indices.txt" format="txt"/>
+      <data name="output2" label="${os.path.splitext(os.path.basename($inputs1[0].name))[0]}_indices.spart" format="spart"/>
+
+</outputs>
+
+
+<tests>
+    <test>
+        <param name="inputs1" value="LIMES_examplefile5_Mantella_PTPML_iTaxoTools_0_1.spart"/>
+        <output name="output1">
+          <assert_contents>
+            <has_text text="M1 = Mantella_tre_PTP"/>
+          </assert_contents> 
+        </output>
+
+    </test>
+</tests>
+
+<help><![CDATA[
+**Attention!... ..Hacked to work with Galaxy and spart-files only**
+
+Options :
+
+::
+
+    I   Calculates the indices (see text).
+    O   Merges the files and produces a file in 'fmt format (see text).
+    C   Simply performs a syntax check of the file 'file (see text).
+    m   Calculates and displays match ratios instead of cTax.
+    n   Normalizes sample names before merging.
+    c   Only takes into account samples common to all methods (possibly after
+        normalization if the -n option is provided). Option forced implicitly
+        with -I.
+    s   Specifies the separator 'sep. Only if 'fmt is 'csv'. Comma by default.
+    h   Displays this help. In English if repeated.
+
+Author: J.Ducasse, feb 2019
+    ]]></help>
+  <citations>
+    <citation type="doi">
+      10.1093/bioinformatics/btz911 
+    </citation>
+    <citation type="doi">
+      10.1111/1755-0998.13470 
+    </citation>
+    <citation type="doi">
+        10.11646/megataxa.6.2.1 
+    </citation>
+  </citations>
+</tool>

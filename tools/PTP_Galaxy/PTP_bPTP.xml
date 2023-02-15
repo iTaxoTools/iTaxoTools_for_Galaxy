@@ -1,0 +1,180 @@
+<tool id="PTP_bPTP" name="PTP and bPTP" version="0.1.0" python_template_version="3.8" profile="21.05">
+    <requirements>
+    </requirements>
+    <command detect_errors="aggressive"><![CDATA[
+      export QT_QPA_PLATFORM=offscreen &&
+      export XDG_RUNTIME_DIR='/home/galaxy/galaxy/database/tmp/runtime-galaxy' &&
+      mkdir outdir &&
+      #if $mycommand=="bPTP"
+         python $__tool_directory__/bPTP.py
+      #else
+        python $__tool_directory__/PTP.py
+      #end if
+        -s '$advanced_opts.seed'
+     -t '$input1' -o 'outdir/report' 
+      #if $advanced_opts.advanced
+        -i '$advanced_opts.MCMCgen'
+        -m '$advanced_opts.method'
+        -n '$advanced_opts.thinning'
+        -b '$advanced_opts.burn'
+
+        #if '$advanced_opts.outgroup_names==None'
+          
+        #else
+          -g '$advanced_opts.outgroup_names' 
+          #if '$advanced_opts.outgroup_remove'
+            -d 
+          #end if
+        #end if
+        -k '$advanced_opts.num_trees'
+      #end if
+     >outdir/'$mycommand'_report.log
+
+     #if $show_select.choice=="spart"
+     &&
+     rm -f outdir/*.log outdir/*.txt outdir/*.png outdir/*.pdf outdir/*.svg outdir/*.tre 
+     #end if
+
+ ]]></command>
+
+    <inputs>
+      <param  type="data" name="input1" label="Source file" format="newick" />
+      <param name="mycommand" type="select" label="Select method" display="radio">
+           <option value="bPTP">Bayesian</option>
+           <option value="PTP">Maximum likelihood</option>
+      </param>
+
+
+        <conditional name="show_select">
+          <param name="choice" type="select" label="Output selection "  display="radio" help="Select output generation and display. (Default only spart files)">
+              <option value="spart" selected="true">Only spart files</option>
+              <option value="collect">Spart to collection (for workflow)</option>
+              <option value="everything">Spart + rest(hidden)</option>
+              <option value="select">Select formats (DEMO! Not functional)</option>
+          </param>
+          <when value="spart">
+             <param name="show_everything" type="hidden" value="false"/>
+          </when>
+          <when value="spart"/>
+          <when value="everything">
+             <param name="show_everything" type="hidden" value="true"/>
+          </when>
+          <when value="select">
+            <param name="format_sel" type="select" label="Select formats"  multiple="true" display="checkboxes" help="Select output generation and display. (Default only spart files)">
+              <option value="PNG">PNG</option>
+              <option value="PDF">PDF</option>
+              <option value="SVG">SVG</option>
+              <option value="TRE">Newick tree</option>
+              <option value="TXT">All other text output</option>
+            </param>
+          </when>
+        </conditional>
+
+      <section name="advanced_opts" title="Advanced options" >
+        <param name="seed" type="integer" label="Enter seed (always used)" value="123"/>
+        <param name="advanced" type="boolean" label="Use options below" value="false"/>
+        <param name="MCMCgen" type="integer" label="Nr. of MCMC generations" value="10000"/>
+        <param name="method" type="text" label="Method" value="H1" help="Method for generating the starting partition (H0, H1, H2, H3, Brutal(PTP only)) (default H1)" />
+        <param name="thinning" type="integer" label="Thinning" value="100"/>
+        <param name="burn" type="float" label="Burn-in" value="0.1"/>
+        <param name="outgroup_names" type="text" label="Outgrouptaxa names (if any)" value="None"/>
+        <param name="outgroup_remove" type="boolean" label="Remove outgroups (if any)" value=""/>
+        <param name="num_trees" type="integer" label="Nr. of trees" value="0"/>
+      </section>
+    </inputs>
+    <outputs>
+      <data name="report" label="$mycommand Spart: ${os.path.splitext($input1.name)[0]}.spart" format="spart" >
+        <discover_datasets pattern="(?P&lt;designation&gt;.+)SuppPart\.spart" ext="spart"  directory="outdir" assign_primary_output="true"/>      
+        <discover_datasets pattern="(?P&lt;designation&gt;.+)MLPart\.spart" ext="spart" directory="outdir"/>      
+         <discover_datasets pattern="(?P&lt;designation&gt;.+)\.log" ext="txt" visible="false" directory="outdir" />      
+         <discover_datasets pattern="(?P&lt;designation&gt;.+)\.png" ext="png" visible="false" directory="outdir" />      
+         <discover_datasets pattern="(?P&lt;designation&gt;.+)\.pdf" ext="pdf" visible="false" directory="outdir" />      
+         <discover_datasets pattern="(?P&lt;designation&gt;.+)\.svg" ext="svg" visible="false" directory="outdir" />      
+         <discover_datasets pattern="(?P&lt;designation&gt;.+)\.tre" ext="newick" visible="false" directory="outdir" />      
+         <discover_datasets pattern="(?P&lt;designation&gt;.+)\.txt" ext="txt" visible="false" directory="outdir" />      
+         <filter>show_select['choice'] == 'spart' or show_select['choice'] == 'everything' </filter>
+      </data>
+
+      <collection name="bPTP_PTP_Col" type="list" label="$mycommand Spart: ${os.path.splitext($input1.name)[0]}.spart">
+       <discover_datasets pattern="(?P&lt;designation&gt;.+)\.spart" ext="spart" visible="true"  directory="outdir" />      
+         <filter>show_select['choice'] == 'collect' </filter>      
+     </collection>
+
+    </outputs>
+    <tests>
+      <test>
+        <param name="input1" value="PTP_examplefile_tree_iTaxoTools_0_1.tre"/>
+        <param name="mycommand" value="bPTP" />
+        <param name="choice" value="spart" />
+        <output name="report" file="test_bPTPML.spart"/>
+      </test>
+      <test>
+        <param name="input1" value="PTP_examplefile_tree_iTaxoTools_0_1.tre"/>
+        <param name="mycommand" value="PTP" />
+        <param name="choice" value="spart" />
+        <output name="report" file="test_PTPML.spart"/>
+      </test>
+    </tests> 
+  
+    <help><![CDATA[
+**Options:**
+  **PTP**
+
+::
+
+  -h, --help            show this help message and exit
+  -t TREE               Input phylogenetic tree file. Tree can be both rooted or unrooted, if unrooted, please use -r option. Supported
+                        format: NEXUS (trees without annotation), RAxML (simple
+                        Newick foramt). If the input file contains multiple trees, the program will do bootstrap analysis
+  -o OUTPUT             Output file name
+  -a ALIGNMENT          Specify the alignment, PTP will build a phylogenetic tree using RAxML, currently only support DNA sequences with GTRGAMMA
+  -u REP-SEQUENCES      Pick representative sequences and write to this file if combined with -a
+  -r                    Re-rooting the input tree on the longest branch (default not)
+  -g OUTGROUPS [OUTGROUPS ...]
+                        Outgroup names, seperate by space. If this option is specified, input tree will be rerooted accordingly
+  -d                    Remove outgroups specified by -g (default not)
+  -m {H0,H1,H2,H3,Brutal}
+                        Method for generate the starting partition (H0, H1, H2, H3, Brutal) (default H0)
+  -pvalue PVALUE        Set the p-value for likelihood ratio test.(default 0.001) If the test failed, the program will output only one species. Note this could mean there is only one species or
+                        all input taxon are different species
+  -p                    Print delimited species on the screen (default not show)
+  -w                    Specify this option to normalize the No.sequenes of each species from the first run and re-run the program
+  -minbr MIN_BRL        The minimal branch length allowed in tree (default 0.0001)
+  -sprate SPE_RATE      Fix the speciation rate to the input value during model optimization (default not fixed)
+  -maxiters MAX_ITER    Set the max number of search if using Brutal search (default 20000). The program will calculate how many searches are
+                        needed for Brutal search, if the number of actual
+                        search is great than this value, the program will use H0 instead
+  -c SSCALE             To use with -s option to set how long a branch is displayed in the plot (default 500)
+  -k NUM-TREES          Run bPTP on first k trees (default all trees)
+  --nmi                 Summary mutiple partitions using max NMI, note this is very slow for large number of trees
+  --version             show program's version number and exit
+
+  **bPTP**
+
+::
+
+  -h, --help            show this help message and exit
+  -t TREES              Input phylogenetic tree file. Trees can be both rooted or unrooted, if unrooted, please use -r option. Supported format: NEXUS
+                        (trees without annotation), RAxML (simple Newick foramt)
+  -o OUTPUT             Output file name
+  -s SEED               MCMC seed, an integer value
+  -r                    Re-rooting the input tree on the longest branch (default not)
+  -g OUTGROUPS [OUTGROUPS ...]
+                        Outgroup names, seperate by space. If this option is specified, all trees will be rerooted accordingly
+  -d                    Remove outgroups specified by -g (default not)
+  -m {H0,H1,H2,H3}      Method for generate the starting partition (H0, H1, H2, H3) (default H1)
+  -i NMCMC              Number of MCMC iterations (default 10000)
+  -n IMCMC              MCMC sampling interval - thinning (default 100)
+  -b BURNIN             MCMC burn-in proportion (default 0.1)
+  -k NUM-TREES          Run bPTP on first k trees (default all trees)
+  --nmi                 Summary mutiple partitions using max NMI, this is very slow for large number of trees
+  --scale SCALE         No. pixel per unit of branch length
+  --version             show program's version number and exit
+
+    ]]></help>
+  <citations>
+    <citation type="doi">
+        10.11646/megataxa.6.2.1 
+    </citation>
+  </citations>
+</tool>

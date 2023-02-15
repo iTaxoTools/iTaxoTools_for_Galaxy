@@ -1,0 +1,125 @@
+<tool id="ABGD" name="ABGD" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+<description>Automatic Barcode Gap Discovery </description>
+    <requirements>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+         $__tool_directory__/abgd '$input1' 
+           #if $isMega: 
+             -m 
+          #end if
+          #if $distance==0: 
+             -t $opts.transition
+          #end if
+          -a
+          -v
+          -X '$opts.min_slope'
+          -p '$opts.pmin'
+          -P '$opts.pmax'
+          -n '$opts.steps'
+          -b '$opts.bids'
+          '$distance'   
+          #if $spart_only: 
+           -u >$output1 &&
+          #else       
+            &>$output1 &&
+          mmv \*.part.\*.\* _part_#3_#2.#3 &&
+          mmv \*.partinit.\*.\* _init_#3_#2.#3 &&
+          mmv \*.\*.svg '_#2_svg.svg' &&
+          #end if
+
+          mmv \*.rec.spart _spart1.spart_tmp &&
+          mmv \*.spart _spart.spart &&
+          mmv \*.spart_tmp _recspart.spart &&
+
+          cp _spart.spart '$output2'&&
+          cp _recspart.spart '$output3'
+
+#*
+          #if not $all_out: 
+          &&
+             rm -f *.txt *.tree
+          #end if
+*#
+    ]]></command>
+    <inputs>
+        <param  type="data" name="input1" label="Source file" format="fasta,phylip" />
+        <param name="isMega" type="boolean" label="MEGA distance file" help="see MEGA information below" />
+        <param name="distance" type="select" label="Distance">
+           <option value="-d 1">Jukes-Cantor</option>
+           <option value="-d 0">Kimura-2P</option>
+           <option value="-d 3">simple distance</option>
+         </param>
+         <param name="spart_only" type="boolean" label="Only spart files" checked="true" help="Only the spart output is collected" />
+         <section name="opts" title="Advanced options">
+           <param name="min_slope" type="float" label="Minimum Slope Increase" value="1.5" help="(default is 1.5)"/>       
+           <param name="transition" type="float" label="transition/transversion"  value="2" help="for Kimura (default is 2) " />       
+           <param name="pmin" type="float" label="Pmin"  value="0.001" help="Minimal a priori value (default is 0.001)" />       
+           <param name="pmax" type="float" label="Pmax"  value="0.1" help="Maximal a priori value (default is 0.001)" />       
+           <param name="steps" type="integer" label="Steps"  value="10" help="Number of steps in [Pmin,Pmax] (default is 10)" />       
+           <param name="bids" type="integer" label="Bids"  value="20" help="Number of bids for graphic histogram of distances (default is 20)" />       
+           <param name="verbose" type="boolean" label="Verbose"  help="All information" />
+          </section>
+    </inputs>
+    <outputs>
+      <data name="output1" label="ABGD: ${os.path.splitext($input1.name)[0]}.log" format="txt">
+        <filter> spart_only is False</filter> 
+      </data>
+      <data name="output2" label="${os.path.splitext(os.path.basename($input1.name))[0]}_init.spart" format="spart"/>
+      <data name="output3" label="${os.path.splitext(os.path.basename($input1.name))[0]}_rec.spart" format="spart"/>
+      <data name="report" label="ABGD: ${os.path.splitext($input1.name)[0]}" format="svg" metadata_source="$input1">
+         <discover_datasets pattern="(?P&lt;designation&gt;.+)\.svg" ext="svg" visible="true" />      
+         <discover_datasets pattern="(?P&lt;designation&gt;.+)\.tre" ext="tre" visible="true" />      
+         <discover_datasets pattern="(?P&lt;designation&gt;.+)\.txt" ext="txt" visible="true" />      
+         <filter> spart_only is False</filter> 
+        </data>
+
+</outputs>
+<tests>
+    <test>
+        <param name="input1" value="ABGD_examplefile1_LophiotomaCOI_iTaxoTools_0_1.fas"/>
+        <param name="distance" value="-d 1"/>
+        <param name="spart_only" value="false"/>
+        <output name="output1">
+          <assert_contents>
+            <has_text text="abgd has finished building and testing all partitions"/>
+          </assert_contents> 
+        </output>
+    </test>
+</tests>
+
+
+
+    <help><![CDATA[
+**Description**
+ABGD  Automatic Barcod Gap Discovery
+
+  syntax is './abgd [-h] [options] distance_matrix or fasta file'
+
+  file is EITHER a distance matrix in phylip format OR aligned sequences in fasta format
+
+Options
+::
+
+                -h    : this help
+                -m    : if present the distance Matrix is supposed to be MEGA CVS (other formats are guessed)
+                -a    : output all partitions and tree files (default only graph files)
+                -s    : output all partitions in 's'imple results txt files
+                -p #  : minimal a priori value (default is 0.001) -Pmin-
+                -P #  : maximal a priori value (default is 0.1) -Pmax-
+                -n #  : number of steps in [Pmin,Pmax] (default is 10)
+                -b #    : number of bids for graphic histogram of distances (default is 20
+                -d #  : distance (0: Kimura-2P, 1: Jukes-Cantor --default--, 2: Tamura-Nei(disabled) 3:simple distance)
+                -o #  : existent directory where results files are written (default is .)
+                -X #  : mininmum Slope Increase (default is 1.5)
+                -t #  : transition/transversion (for Kimura) default:2
+
+    ]]></help>
+    <citations>
+    <citation type="doi">
+      10.1111/1755-0998.13281
+    </citation>
+    <citation type="doi">
+        10.11646/megataxa.6.2.1 
+    </citation>
+  </citations>
+</tool>

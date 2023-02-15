@@ -1,0 +1,179 @@
+begin spart;
+
+Project_name = ffffggg;
+
+Date = 2021-03-24T09:05:03;
+
+N_spartitions = 2: test1 / test2
+;
+
+N_individuals = 160 / 160
+;
+
+N_subsets = 18 / 5
+;
+
+Individual_assignment =
+Aampobofofo2: 3 / 2
+Aamtsiranana1: 3 / 2
+Aamtsiranana2: 3 / 2
+Aamtsiranana3: 3 / 2
+Aorangea1: 3 / 2
+Aorangea12: 3 / 2
+Aorangea3: 3 / 2
+Aorangea4: 3 / 2
+Aorangea5: 3 / 2
+Aorangea7: 3 / 2
+Aorangea9: 3 / 2
+MAndohahela: 9 / 4
+MFierenana1: 10 / 4
+MFierenana2: 10 / 4
+Mambatolahy1: 9 / 4
+Mambatolahy2: 9 / 4
+Mambohitsara1: 10 / 4
+Manala1: 11 / 4
+Manala2: 10 / 4
+Mandasibe1: 10 / 4
+Mandasibe10: 10 / 4
+Mandasibe11: 10 / 4
+Mandasibe12: 10 / 4
+Mandasibe13: 10 / 4
+Mandasibe14: 10 / 4
+Mandasibe15: 10 / 4
+Mandasibe16: 10 / 4
+Mandasibe17: 10 / 4
+Mandasibe18: 10 / 4
+Mandasibe19: 10 / 4
+Mandasibe2: 10 / 4
+Mandasibe20: 10 / 4
+Mandasibe21: 10 / 4
+Mandasibe22: 10 / 4
+Mandasibe23: 10 / 4
+Mandasibe24: 10 / 4
+Mandasibe25: 10 / 4
+Mandasibe26: 10 / 4
+Mandasibe27: 10 / 4
+Mandasibe28: 10 / 4
+Mandasibe29: 10 / 4
+Mandasibe3: 10 / 4
+Mandasibe30: 10 / 4
+Mandasibe31: 10 / 4
+Mandasibe4: 10 / 4
+Mandasibe5: 10 / 4
+Mandasibe6: 10 / 4
+Mandasibe7: 10 / 4
+Mandasibe8: 10 / 4
+Mandasibe9: 10 / 4
+Mangozongahy1: 12 / 4
+Mcrottini1: 12 / 4
+Mcrottini2: 12 / 4
+Mimaloka1: 9 / 4
+Mimaloka2: 9 / 4
+Mimaloka3: 9 / 4
+Mimaloka4: 9 / 4
+Mimaloka5: 9 / 4
+Mmahasoa: 10 / 4
+Mmakira1: 12 / 4
+Mmakira2: 12 / 4
+Mmakira3: 12 / 4
+Mmakira4: 12 / 4
+Mmakira6: 12 / 4
+Mmakira7: 12 / 4
+Mmakira8: 12 / 4
+Mnosymangabe2: 15 / 4
+Mnosymangabe3: 15 / 4
+Mnosymangabe4: 15 / 4
+Mnosymangabe5: 15 / 4
+Mnosymangabe6: 15 / 4
+Mnosymangabe7: 15 / 4
+Mnosymangabe8: 15 / 4
+Mranomafana1: 9 / 4
+Mranomafana2: 9 / 4
+Mranomafana3: 9 / 4
+Mranomafana5: 9 / 4
+Mranomafanakely1: 9 / 4
+Mranomafanakely2: 9 / 4
+Mranomafanakely3: 9 / 4
+Mranomafanakely4: 9 / 4
+Msahafina2: 10 / 4
+Msahafina3: 10 / 4
+Mtorotorofotsy1: 10 / 4
+Mtsaratanana1: 13 / 4
+Mtsaratanana2: 14 / 4
+Mx1: 10 / 4
+Mx2: 10 / 4
+Mx3: 10 / 4
+Pamkarafantsika1: 3 / 2
+Pamkarafantsika2: 3 / 2
+Pamkarana1: 4 / 2
+Pamkarana2: 4 / 2
+Pampobofofo1: 4 / 2
+Pkirindy1: 5 / 2
+Pkirindy2: 5 / 2
+Pkirindy3: 5 / 2
+Pkirindy4: 5 / 2
+Pmontagnefr1: 4 / 2
+Pmontagnefr10: 4 / 2
+Pmontagnefr11: 4 / 2
+Pmontagnefr2: 4 / 2
+Pmontagnefr5: 4 / 2
+Pmontagnefr6: 4 / 2
+Pmontagnefr9: 4 / 2
+Pmontagnefrancais1: 4 / 2
+Pmontagnefrancais2: 4 / 2
+Pmontagnefrancais3: 4 / 2
+Pmontagnefrancais4: 4 / 2
+Pmontagnefrancais5: 4 / 2
+Pmontagnefrancais6: 4 / 2
+Pmontagnefrancais7: 4 / 2
+Pmontagnefrancais8: 4 / 2
+Pmontagnefrancais9: 4 / 2
+Porangea10: 4 / 2
+Porangea11: 4 / 2
+Porangea2: 4 / 2
+Porangea6: 4 / 2
+Porangea8: 4 / 2
+Sambre1: 3 / 2
+Sambre2: 3 / 2
+Santanambao: 3 / 2
+Santsirasira1: 3 / 2
+Smarojejy1: 3 / 2
+Smarojejy10: 3 / 2
+Smarojejy11: 3 / 2
+Smarojejy2: 3 / 2
+Smarojejy3: 3 / 2
+Smarojejy4: 3 / 2
+Smarojejy5: 3 / 2
+Smarojejy6: 3 / 2
+Smarojejy7: 3 / 2
+Smarojejy8: 3 / 2
+Smarojejy9: 3 / 2
+Smontagnefr12: 3 / 2
+Smontagnefr13: 3 / 2
+Smontagnefr3: 3 / 2
+Smontagnefr4: 3 / 2
+Smontagnefr7: 3 / 2
+Smontagnefr8: 3 / 2
+Smtambre: 3 / 2
+baeuandasibe1: 18 / 5
+baeuandasibe2: 18 / 5
+baeuandasibe3: 18 / 5
+fasika: 1 / 1
+igneo1: 6 / 3
+igneo2: 6 / 3
+igneo3: 7 / 3
+igneoFauxcap: 8 / 3
+igneoanakao: 8 / 3
+igneoifaty: 8 / 3
+igneosakabera: 8 / 3
+meva: 2 / 1
+mourandasibe1: 16 / 4
+mourandasibe2: 16 / 4
+mourandasibe3: 16 / 4
+mourandasibe4: 16 / 4
+mourandasibe5: 16 / 4
+mourcrottini: 17 / 4
+vitreuscrottini: 8 / 3
+;
+
+end;

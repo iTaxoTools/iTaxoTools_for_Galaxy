@@ -1,0 +1,26 @@
+
+# Fichier stub mypy pour xlrd.
+
+from typing import Union,Sequence,List
+
+XL_CELL_DATE=3
+XL_CELL_EMPTY=0
+
+def open_workbook(fich: str, on_demand: bool) -> Book:...
+
+class Book:
+    def sheet_by_index(self,idx: int) -> Sheet:...
+    def sheet_by_name(self,name: str) -> Sheet:...
+    def unload_sheet(self,sheet: Union[int,str]) -> None:...
+    def __enter__(self) -> Book:...
+    def __exit__(self,a,b,c):...
+    def sheet_names(self) -> List[str]:...
+
+class Sheet:
+    name: str
+    nrows: int
+    def row(self,idx: int) -> Sequence[Cell]:...
+
+class Cell:
+    value: Union[str,float,int]
+    ctype: int
